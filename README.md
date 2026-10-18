@@ -11,7 +11,6 @@ the backups and the log) lives in one folder: `~/backups`.
 
 Works on Debian/Ubuntu and RHEL/Rocky/Alma (bash 4.4+, tar, gzip, flock).
 
-
 ## Install
 
 Run as your normal user, not with sudo:
@@ -28,6 +27,11 @@ sudo ./backup.sh daily            # test once and read the output
 sudo crontab -e                   # paste the lines from cron/crontab.example
 ```
 
+If you get `Permission denied`, make the script executable:
+
+```bash
+chmod +x ~/backups/backup.sh
+```
 
 ## Folder layout
 
@@ -51,7 +55,6 @@ of the path (`~/docker/myapp` gives `myapp`) or the database container name.
 
 `git pull` never touches `backup.conf`, the backups or the log.
 
-
 ## Usage
 
 ```bash
@@ -63,32 +66,31 @@ sudo ~/backups/backup.sh quarterly    # archives QUARTERLY_PATHS
 
 Every run also dumps every database in `DATABASES`.
 
-| Run       | Cron schedule             | Kept for |
-| --------- | ------------------------- | -------- |
-| daily     | every day, 01:40          | 7 days   |
-| weekly    | Sundays, 03:40            | 28 days  |
-| monthly   | 1st of the month, 05:40   | 365 days |
-| quarterly | 1st of Jan/Apr/Jul/Oct    | 730 days |
+| Run       | Cron schedule           | Kept for |
+| --------- | ----------------------- | -------- |
+| daily     | every day, 01:40        | 7 days   |
+| weekly    | Sundays, 03:40          | 28 days  |
+| monthly   | 1st of the month, 05:40 | 365 days |
+| quarterly | 1st of Jan/Apr/Jul/Oct  | 730 days |
 
 Only one backup runs at a time. Exit code `0` means everything worked.
 Anything else means something failed, and `~/backups/backup.log` says what.
-
 
 ## Configure
 
 Edit `~/backups/backup.conf`. Write `$USER_HOME` instead of `~`, because
 under sudo or cron `~` means `/root`.
 
-| Setting               | Meaning                                       |
-| --------------------- | --------------------------------------------- |
-| `DAILY_PATHS`         | Folders and files the daily run archives      |
-| `WEEKLY_PATHS`        | Same, for the weekly run                      |
-| `MONTHLY_PATHS`       | Same, for the monthly run                     |
-| `QUARTERLY_PATHS`     | Same, for the quarterly run                   |
-| `DATABASES`           | Database containers, dumped on every run      |
-| `EXCLUDE_PATHS`       | Exact folders or files to leave out           |
-| `EXCLUDE_PATTERNS`    | Names to leave out anywhere (`node_modules`)  |
-| `KEEP_*_DAYS`         | How long to keep each kind of backup          |
+| Setting            | Meaning                                      |
+| ------------------ | -------------------------------------------- |
+| `DAILY_PATHS`      | Folders and files the daily run archives     |
+| `WEEKLY_PATHS`     | Same, for the weekly run                     |
+| `MONTHLY_PATHS`    | Same, for the monthly run                    |
+| `QUARTERLY_PATHS`  | Same, for the quarterly run                  |
+| `DATABASES`        | Database containers, dumped on every run     |
+| `EXCLUDE_PATHS`    | Exact folders or files to leave out          |
+| `EXCLUDE_PATTERNS` | Names to leave out anywhere (`node_modules`) |
+| `KEEP_*_DAYS`      | How long to keep each kind of backup         |
 
 ### Databases
 
@@ -112,7 +114,6 @@ Passwords are read from the container's own environment
 `MONGO_INITDB_ROOT_USERNAME` / `MONGO_INITDB_ROOT_PASSWORD`), so none go
 in `backup.conf`.
 
-
 ## Update
 
 ```bash
@@ -121,7 +122,6 @@ cd ~/backups && git pull
 
 Run git as your normal user, not with sudo. If a new version adds settings,
 compare `backup.conf` with `backup.conf.example`.
-
 
 ## Restore
 
@@ -150,7 +150,6 @@ gunzip -c <file>.archive.gz | sudo docker exec -i <container> \
 For Postgres, use the same user as in `DATABASES`. "role already exists"
 messages are normal.
 
-
 ## Log rotation (optional)
 
 Save as `/etc/logrotate.d/trinity-backup`, with your user name:
@@ -164,7 +163,6 @@ Save as `/etc/logrotate.d/trinity-backup`, with your user name:
     notifempty
 }
 ```
-
 
 ## Good to know
 
