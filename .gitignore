@@ -1,0 +1,10 @@
+# Real config holds paths and possibly passwords. Only the .example is committed.
+backup.conf
+
+# Never commit backups or logs
+*.tar.gz
+*.gz
+*.pgdump
+*.mongo.archive
+*.log
+backups/
