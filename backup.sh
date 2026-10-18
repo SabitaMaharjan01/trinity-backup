@@ -218,6 +218,9 @@ case "$TYPE" in
   *) echo "Usage: sudo $0 daily|weekly|monthly|quarterly" >&2; exit 2 ;;
 esac
 
+# Root is needed to read every file, including Docker data owned by other users.
+[ "$(id -u)" = 0 ] || die "Run this script with sudo: sudo $0 $TYPE"
+
 for cmd in tar gzip flock find stat readlink du cut getent; do
   command -v "$cmd" > /dev/null 2>&1 || die "Required command not found: $cmd"
 done
@@ -227,8 +230,6 @@ CONFIG_FILE="$SCRIPT_DIR/backup.conf"
 OWNER="$(stat -c '%U' "$SCRIPT_DIR")"    # the user who cloned the repo
 USER_HOME="$(getent passwd "$OWNER" | cut -d: -f6)"
 [ -n "$USER_HOME" ] || die "Could not find the home folder of $OWNER"
-
-[ "$(id -u)" = 0 ] || warn "Not running as root. Files you cannot read will fail. Use: sudo $0 $TYPE"
 
 load_config
 
@@ -258,7 +259,7 @@ for p in "${paths[@]}"; do
 done
 
 # Root made the files. Give them to the user so they can copy them off the server.
-[ "$(id -u)" != 0 ] || chown -R "$OWNER:" "$BACKUP_DIR"
+chown -R "$OWNER:" "$BACKUP_DIR"
 
 if [ "$FAILED" -eq 0 ]; then
   delete_old daily "$KEEP_DAILY_DAYS"

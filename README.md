@@ -13,7 +13,7 @@ Works on Debian/Ubuntu and RHEL/Rocky/Alma (bash 4.4+, tar, gzip, flock).
 
 ## Install
 
-Run as your normal user, not with sudo:
+Clone and edit as your normal user. Run the script itself with sudo:
 
 ```bash
 cd ~
@@ -64,7 +64,8 @@ sudo ~/backups/backup.sh monthly      # archives MONTHLY_PATHS
 sudo ~/backups/backup.sh quarterly    # archives QUARTERLY_PATHS
 ```
 
-Every run also dumps every database in `DATABASES`.
+Always use sudo. The script stops if it is not run as root. Every run also
+dumps every database in `DATABASES`.
 
 | Run       | Cron schedule           | Kept for |
 | --------- | ----------------------- | -------- |
