@@ -11,10 +11,10 @@
 # Every run also dumps every database in DATABASES.
 #
 # The config is backup.conf next to this script. "The user" is whoever owns
-# the folder this script is in (the user who cloned the repo), and backups go
-# to that user's home:
-#   /home/alice/trinity-backup/     <- this repo, with backup.conf
-#   /home/alice/backups/
+# the folder this script is in (the user who cloned the repo). Clone it as
+# ~/backups and everything stays in that one folder:
+#   /home/alice/backups/            <- this repo, cloned as "backups"
+#     backup.conf
 #     backup.log
 #     daily/<YYYY-MM-DD>/<YYYY-MM-DD_HHMMSS>_<host>_<name>.tar.gz
 #     weekly/<YYYY-MM-DD>/...
