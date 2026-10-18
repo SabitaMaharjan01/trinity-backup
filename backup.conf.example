@@ -29,11 +29,33 @@ QUARTERLY_PATHS=(
   "$USER_HOME/docker"
 )
 
+
+# ---------------------------------------------------------------- databases
+# Dumped on every run (daily, weekly, monthly and quarterly), into the same
+# folder as that run's archives. One line per database container:
+#   "<engine> <container> [user]"
+#   engine:    postgres, mysql, mariadb or mongo
+#   container: a name from: sudo docker ps --format '{{.Names}}'
+#   user:      optional. Default: $POSTGRES_USER or postgres; root for mysql.
+#              Supabase needs supabase_admin.
+# Passwords come from the container's own environment variables
+# (POSTGRES_PASSWORD, MYSQL_ROOT_PASSWORD or MARIADB_ROOT_PASSWORD,
+# MONGO_INITDB_ROOT_USERNAME and _PASSWORD), so none go in this file.
+# All databases in the container are dumped.
+DATABASES=(
+  # "postgres supabase-db supabase_admin"
+  # "mariadb  frappe_docker-db-1"
+  # "mongo    my-mongo"
+)
+
+
+# ---------------------------------------------------------------- leave out
+
 # Folders or files to leave out (full paths).
-# Running database folders are copied as they are. List them here if you
-# back the database up some other way.
+# A running database's data folder copies badly. Once its container is in
+# DATABASES, list its data folder here to save space.
 EXCLUDE_PATHS=(
-  # "$USER_HOME/docker/frappe_docker/.git"
+  # "$USER_HOME/docker/supabase-kalas/volumes/db/data"
 )
 
 # Names to leave out wherever they appear.
