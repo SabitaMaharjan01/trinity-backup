@@ -5,7 +5,7 @@
 #
 # This file is read by bash: no spaces around "=", and quote every value.
 # $USER_HOME is the home folder of the user who owns this repo, for example
-# /home/ttpl. Use it instead of ~ (under sudo or cron, ~ means /root).
+# /home/alice. Use it instead of ~ (under sudo or cron, ~ means /root).
 
 
 # ---------------------------------------------------------------- what to archive
@@ -13,7 +13,7 @@
 
 # Archived by "backup.sh daily": critical services.
 DAILY_PATHS=(
-  "$USER_HOME/docker/supabase-kalas"
+  "$USER_HOME/docker/myapp"
 )
 
 # Archived by "backup.sh weekly": everything.
@@ -55,7 +55,7 @@ DATABASES=(
 # A running database's data folder copies badly. Once its container is in
 # DATABASES, list its data folder here to save space.
 EXCLUDE_PATHS=(
-  # "$USER_HOME/docker/supabase-kalas/volumes/db/data"
+  # "$USER_HOME/docker/myapp/volumes/db/data"
 )
 
 # Names to leave out wherever they appear.

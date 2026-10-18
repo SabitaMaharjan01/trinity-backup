@@ -15,27 +15,27 @@ Works on Debian/Ubuntu and RHEL/Rocky/Alma. Needs bash 4.4+ and the usual base t
 Clone the repo into the user's home folder. Root's cron runs the script from there, and the backups land in `~/backups`:
 
 ```
-/home/ttpl/
+/home/alice/
   trinity-backup/           <- this repo (git pull to update)
     backup.sh
     backup.conf             <- your settings, not tracked by git
   backups/                  <- created by the script
     backup.log
     daily/2026-10-18/
-      2026-10-18_014000_ttpl-vps-eu_supabase-db.sql.gz      <- database dump
-      2026-10-18_014000_ttpl-vps-eu_supabase-kalas.tar.gz   <- folder archive
+      2026-10-18_014000_myserver_supabase-db.sql.gz   <- database dump
+      2026-10-18_014000_myserver_myapp.tar.gz         <- folder archive
     weekly/2026-10-18/
-      2026-10-18_034000_ttpl-vps-eu_docker.tar.gz
+      2026-10-18_034000_myserver_docker.tar.gz
     monthly/2026-10-01/
-      2026-10-01_054000_ttpl-vps-eu_docker.tar.gz
+      2026-10-01_054000_myserver_docker.tar.gz
     quarterly/2026-10-01/
-      2026-10-01_074000_ttpl-vps-eu_docker.tar.gz
+      2026-10-01_074000_myserver_docker.tar.gz
 ```
 
 - **The user** is whoever owns the `trinity-backup` folder. The script finds their home folder by itself, so the same `backup.conf` works on every server.
 - **Root** runs the script so it can read every file, including Docker data owned by other users.
 - **The backups** are given back to the user when the run ends (files `600`, folders `700`), so the user can copy them off the server without sudo.
-- **The file name** is the date and time, the host, and the last part of the path: `/home/ttpl/docker/uptime-kuma` becomes `2026-10-18_150221_milkyway_uptime-kuma.tar.gz`. Two paths with the same last part in one run (like `/a/data` and `/b/data`) clash, so the second one fails. Back up their parent folder instead. A database dump is named after its container instead.
+- **The file name** is the date and time, the host, and the last part of the path: `/home/alice/docker/uptime-kuma` becomes `2026-10-18_150221_myserver_uptime-kuma.tar.gz`. Two paths with the same last part in one run (like `/a/data` and `/b/data`) clash, so the second one fails. Back up their parent folder instead. A database dump is named after its container instead.
 
 ## Files
 
@@ -47,7 +47,7 @@ Clone the repo into the user's home folder. Root's cron runs the script from the
 
 ## Install
 
-Run on each server **as the normal user** (not with sudo, so the repo belongs to them). Replace `ttpl` with that user.
+Run on each server **as the normal user** (not with sudo, so the repo belongs to them). Replace `alice` with that user.
 
 ```bash
 # 1. Get the code
@@ -153,11 +153,11 @@ Run git as the normal user, not with sudo, so the files stay owned by them.
 Extract the archive into the folder that contained the backed-up path. As root, `tar` restores the original owners and permissions.
 
 ```bash
-# Restores /home/ttpl/docker/supabase-kalas
-sudo tar -xzf <date>_<time>_<host>_supabase-kalas.tar.gz -C /home/ttpl/docker
+# Restores /home/alice/docker/myapp
+sudo tar -xzf <date>_<time>_<host>_myapp.tar.gz -C /home/alice/docker
 
-# Restores /home/ttpl/docker
-sudo tar -xzf <date>_<time>_<host>_docker.tar.gz -C /home/ttpl
+# Restores /home/alice/docker
+sudo tar -xzf <date>_<time>_<host>_docker.tar.gz -C /home/alice
 ```
 
 Stop the service's containers before extracting over a running service.
@@ -187,7 +187,7 @@ For Postgres, use the same user as in `DATABASES` (`supabase_admin` for Supabase
 Save as `/etc/logrotate.d/trinity-backup`:
 
 ```
-/home/ttpl/backups/backup.log {
+/home/alice/backups/backup.log {
     weekly
     rotate 8
     compress

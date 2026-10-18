@@ -13,8 +13,8 @@
 # The config is backup.conf next to this script. "The user" is whoever owns
 # the folder this script is in (the user who cloned the repo), and backups go
 # to that user's home:
-#   /home/ttpl/trinity-backup/     <- this repo, with backup.conf
-#   /home/ttpl/backups/
+#   /home/alice/trinity-backup/     <- this repo, with backup.conf
+#   /home/alice/backups/
 #     backup.log
 #     daily/<YYYY-MM-DD>/<YYYY-MM-DD_HHMMSS>_<host>_<name>.tar.gz
 #     weekly/<YYYY-MM-DD>/...
@@ -23,12 +23,12 @@
 #
 # Each path (a folder or a single file) becomes one .tar.gz file named after
 # its last part. Example:
-#   /home/ttpl/docker/supabase-kalas
-#   -> 2026-10-18_014000_ttpl-vps-eu_supabase-kalas.tar.gz
+#   /home/alice/docker/myapp
+#   -> 2026-10-18_014000_myserver_myapp.tar.gz
 #
 # Each database becomes one dump named after its Docker container. Example:
-#   postgres supabase-db  -> 2026-10-18_014000_ttpl-vps-eu_supabase-db.sql.gz
-#   mongo my-mongo        -> 2026-10-18_014000_ttpl-vps-eu_my-mongo.archive.gz
+#   postgres supabase-db  -> 2026-10-18_014000_myserver_supabase-db.sql.gz
+#   mongo my-mongo        -> 2026-10-18_014000_myserver_my-mongo.archive.gz
 #
 # Restore: sudo tar -xzf <file>.tar.gz -C <folder that contained the path>
 # Database restores are in the README.

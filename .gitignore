@@ -13,3 +13,6 @@ backups/
 daily/
 weekly/
 .lock
+
+# Local Claude Code settings
+.claude/
