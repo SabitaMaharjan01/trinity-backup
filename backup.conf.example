@@ -1,24 +1,11 @@
-# backups-trinity configuration
+# trinity-backup configuration
 #
-# Install (replace "ttpl" with the user on this server):
-#   sudo mkdir -p /home/ttpl/backups-trinity
-#   sudo cp backup.conf.example /home/ttpl/backups-trinity/backup.conf
-#   sudo chown root:root /home/ttpl/backups-trinity/backup.conf
-#   sudo chmod 600 /home/ttpl/backups-trinity/backup.conf
+# Setup: cp backup.conf.example backup.conf, then edit backup.conf.
+# backup.conf is not tracked by git, so "git pull" never touches it.
 #
-# Backups and backup.log are written next to this file unless you set
-# BACKUP_ROOT or LOG_FILE below.
-#
-# This file is read by bash: no spaces around "=", quote every value,
-# and always use full paths (never ~, which is root's home under sudo/cron).
-
-
-# ---------------------------------------------------------------- paths
-
-BASE_DIR="/home/ttpl"                    # the user's home folder, change per server
-DOCKER_DIR="$BASE_DIR/docker"
-# BACKUP_ROOT="/mnt/backup-disk"         # optional. Default: the folder holding this file
-# LOG_FILE="/var/log/backups-trinity.log" # optional. Default: <BACKUP_ROOT>/backup.log
+# This file is read by bash: no spaces around "=", and quote every value.
+# $USER_HOME is the home folder of the user who owns this repo, for example
+# /home/ttpl. Use it instead of ~ (under sudo or cron, ~ means /root).
 
 
 # ---------------------------------------------------------------- what to archive
@@ -26,19 +13,27 @@ DOCKER_DIR="$BASE_DIR/docker"
 
 # Archived by "backup.sh daily": critical services.
 DAILY_PATHS=(
-  "$DOCKER_DIR/supabase-kalas"
+  "$USER_HOME/docker/supabase-kalas"
 )
 
 # Archived by "backup.sh weekly": everything.
 WEEKLY_PATHS=(
-  "$DOCKER_DIR"
+  "$USER_HOME/docker"
+)
+
+# Archived by "backup.sh monthly" and "backup.sh quarterly": kept longer.
+MONTHLY_PATHS=(
+  "$USER_HOME/docker"
+)
+QUARTERLY_PATHS=(
+  "$USER_HOME/docker"
 )
 
 # Folders or files to leave out (full paths).
 # Running database folders are copied as they are. List them here if you
 # back the database up some other way.
 EXCLUDE_PATHS=(
-  # "$DOCKER_DIR/frappe_docker/.git"
+  # "$USER_HOME/docker/frappe_docker/.git"
 )
 
 # Names to leave out wherever they appear.
@@ -49,7 +44,12 @@ EXCLUDE_PATTERNS=(
 )
 
 
-# ---------------------------------------------------------------- retention
+# ---------------------------------------------------------------- where and how long
 
-KEEP_DAILY_DAYS=7      # delete daily run folders older than this
-KEEP_WEEKLY_DAYS=28    # delete weekly run folders older than this
+# BACKUP_DIR="/mnt/backup-disk"   # optional. Default: $USER_HOME/backups
+
+# Run folders older than this many days are deleted.
+KEEP_DAILY_DAYS=7        # about 7 daily backups
+KEEP_WEEKLY_DAYS=28      # about 4 weekly backups
+KEEP_MONTHLY_DAYS=365    # about 12 monthly backups
+KEEP_QUARTERLY_DAYS=730  # about 8 quarterly backups

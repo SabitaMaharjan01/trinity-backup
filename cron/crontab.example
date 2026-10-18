@@ -1,0 +1,21 @@
+# Root crontab for trinity-backup.
+# Install: run "sudo crontab -e" and paste the lines below.
+# Replace "ttpl" with the user who cloned the repo. Times are server local time.
+# The script writes its own log (~/backups/backup.log), so no ">>" is needed.
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Every day at 01:40: DAILY_PATHS (critical services)
+40 1 * * * /home/ttpl/trinity-backup/backup.sh daily
+
+# Every Sunday at 03:40: WEEKLY_PATHS (everything)
+# Runs are two hours apart so they never overlap. If they do, the later
+# run stops with a lock error.
+40 3 * * 0 /home/ttpl/trinity-backup/backup.sh weekly
+
+# 1st of every month at 05:40: MONTHLY_PATHS
+40 5 1 * * /home/ttpl/trinity-backup/backup.sh monthly
+
+# 1st of January, April, July and October at 07:40: QUARTERLY_PATHS
+40 7 1 1,4,7,10 * /home/ttpl/trinity-backup/backup.sh quarterly

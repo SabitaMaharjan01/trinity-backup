@@ -8,3 +8,8 @@ backup.conf
 *.mongo.archive
 *.log
 backups/
+
+# Left over from older versions that wrote backups into the repo folder
+daily/
+weekly/
+.lock
